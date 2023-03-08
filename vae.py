@@ -1,5 +1,6 @@
 import tensorflow as tf
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def train_generator(data, b_s):
@@ -121,6 +122,25 @@ def vae_mlp_4x4(latent_dim, act_func, f_act):
 
     return encoder, decoder
 
+
+def plot_scatter(m_0, m_1, labels, title_x, title_y, title_cbar, alpha):
+    fig, ax = plt.subplots(figsize=(4, 3), dpi=150)
+    im = ax.scatter(m_0, m_1, c=labels, alpha=alpha)
+    ax.set_xlabel(title_x, fontsize=12)
+    ax.set_ylabel(title_y, fontsize=12)
+    cbar = fig.colorbar(im)
+    cbar.set_label(title_cbar)
+    plt.show()
+
+
+def plot_hist(history_dict):
+    fig, ax = plt.subplots(figsize=(4, 3), dpi=150)
+    ax.plot(history_dict["val_val_loss"], ".", label="Validation loss", )
+    ax.plot(history_dict["reconstruction_loss"], ".", label="Reconstruction loss")
+    ax.set_xlabel('Epochs')
+    ax.set_ylabel('Loss', color='black')
+    plt.legend()
+    plt.show()
 
 
 
