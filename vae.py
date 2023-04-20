@@ -1,6 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
+import qutip as qt
 
 
 def train_generator(data, b_s):
@@ -143,4 +144,30 @@ def plot_hist(history_dict):
     plt.show()
 
 
+def linear_fit(x, y):
+    fit_obj = np.polyfit(x, y, 1)
+    fit_pred = np.poly1d(fit_obj)
 
+    return np.reshape(fit_pred(x), (21, 10))
+
+
+def gen_plot_data(rho_array, vae_trained, scan_arr):
+    idx = np.round(np.linspace(0, len(scan_arr) - 1, 21)).astype(int)
+    selected_rho = np.zeros((21, 10, 16))
+    selected_alpha = np.array([[scan_arr[i]] * 10 for i in idx]).flatten()
+    cnt = 0
+    for i in idx * 1000:
+        selected_rho[cnt] = rho_array[i:i + 10]
+        cnt += 1
+
+    selected_rho_reshape = np.reshape(selected_rho, (210, 16))
+    z_mean, _, _ = vae_trained.encoder.predict(selected_rho_reshape)
+    concur_arr = np.array(
+        [qt.concurrence(qt.Qobj(dm.reshape(4, 4), dims=[[2, 2], [2, 2]])) for dm in selected_rho_reshape])
+
+    pred_conc = linear_fit(np.abs(z_mean[:, 0]), concur_arr)
+    pred_alpha = linear_fit(z_mean[:, 0], selected_alpha)
+
+    return np.reshape(selected_alpha, (21, 10)), np.reshape(concur_arr, (21, 10)), np.reshape(z_mean,
+                                                                                              (21, 10)), np.reshape(
+        pred_conc, (21, 10)), np.reshape(pred_alpha, (21, 10))
