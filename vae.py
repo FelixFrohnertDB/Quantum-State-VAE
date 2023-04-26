@@ -171,3 +171,7 @@ def gen_plot_data(rho_array, vae_trained, scan_arr):
     return np.reshape(selected_alpha, (21, 10)), np.reshape(concur_arr, (21, 10)), np.reshape(z_mean,
                                                                                               (21, 10)), np.reshape(
         pred_conc, (21, 10)), np.reshape(pred_alpha, (21, 10))
+
+
+def kl_loss(mu, sig):
+    return -0.5 * (1 + sig - mu ** 2 - np.exp(sig))
