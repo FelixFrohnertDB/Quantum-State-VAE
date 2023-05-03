@@ -123,6 +123,39 @@ def vae_mlp_4x4(latent_dim, act_func, f_act):
 
     return encoder, decoder
 
+def vae_mlp(latent_dim, act_func, f_act):
+    encoder_inputs = tf.keras.Input(shape=64)
+    x = encoder_inputs
+    x = tf.keras.layers.Dense(64, activation=act_func)(x)
+    x = tf.keras.layers.Dropout(0.2)(x)
+    x = tf.keras.layers.Dense(32, activation=act_func)(x)
+    x = tf.keras.layers.Dropout(0.2)(x)
+    x = tf.keras.layers.Dense(16, activation=act_func)(x)
+    x = tf.keras.layers.Dropout(0.2)(x)
+    x = tf.keras.layers.Dense(8, activation=act_func)(x)
+    x = tf.keras.layers.Dropout(0.2)(x)
+
+    z_mean = tf.keras.layers.Dense(latent_dim, name="z_mean")(x)
+    z_log_var = tf.keras.layers.Dense(latent_dim, name="z_log_var")(x)
+    z = Sampling()([z_mean, z_log_var])
+    encoder = tf.keras.Model(encoder_inputs, [z_mean, z_log_var, z], name="encoder")
+
+    latent_inputs = tf.keras.Input(shape=(latent_dim,))
+    x = latent_inputs
+    x = tf.keras.layers.Dense(8, activation=act_func)(x)
+    x = tf.keras.layers.Dropout(0.2)(x)
+    x = tf.keras.layers.Dense(16, activation=act_func)(x)
+    x = tf.keras.layers.Dropout(0.2)(x)
+    x = tf.keras.layers.Dense(32, activation=act_func)(x)
+    x = tf.keras.layers.Dropout(0.2)(x)
+    x = tf.keras.layers.Dense(64, activation=act_func)(x)
+    x = tf.keras.layers.Dropout(0.2)(x)
+
+    decoder_outputs = tf.keras.layers.Dense(64, activation=f_act)(x)
+    decoder = tf.keras.Model(latent_inputs, decoder_outputs, name="decoder")
+
+    return encoder, decoder
+
 
 def plot_scatter(m_0, m_1, labels, title_x, title_y, title_cbar, alpha):
     fig, ax = plt.subplots()
