@@ -148,7 +148,7 @@ def linear_fit(x, y):
     fit_obj = np.polyfit(x, y, 1)
     fit_pred = np.poly1d(fit_obj)
 
-    return np.reshape(fit_pred(x), (21, 10))
+    return np.reshape(fit_pred(x), (21, 10)), fit_pred
 
 
 def gen_plot_data(rho_array, vae_trained, scan_arr):
@@ -165,12 +165,12 @@ def gen_plot_data(rho_array, vae_trained, scan_arr):
     concur_arr = np.array(
         [qt.concurrence(qt.Qobj(dm.reshape(4, 4), dims=[[2, 2], [2, 2]])) for dm in selected_rho_reshape])
 
-    pred_conc = linear_fit(np.abs(z_mean[:, 0]), concur_arr)
-    pred_alpha = linear_fit(z_mean[:, 0], selected_alpha)
+    pred_conc, fitobj_conc = linear_fit(np.abs(z_mean[:, 0]), concur_arr)
+    pred_alpha,fitobj_alpha = linear_fit(z_mean[:, 0], selected_alpha)
 
     return np.reshape(selected_alpha, (21, 10)), np.reshape(concur_arr, (21, 10)), np.reshape(z_mean,
                                                                                               (21, 10)), np.reshape(
-        pred_conc, (21, 10)), np.reshape(pred_alpha, (21, 10))
+        pred_conc, (21, 10)), np.reshape(pred_alpha, (21, 10)), fitobj_conc, fitobj_alpha
 
 
 def kl_loss(mu, sig):
