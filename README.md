@@ -9,3 +9,12 @@ This work highlights the ability of unsupervised machine learning models to prod
 
 
 
+## Files in the repository:
+        Quantum-State-VAE
+          |-- data
+                |-- *.h5 # trained VAE models 
+                |-- *.npy # saved quantum states  
+          |-- Analysis.ipynb # contains code to reproduce figures from paper
+          |-- Minimal Example.ipynb # minimal example of VAE finding structure in quantum states
+          |-- vae.py # module for VAE   
+          |-- README
