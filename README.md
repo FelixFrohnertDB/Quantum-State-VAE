@@ -18,3 +18,4 @@ This work highlights the ability of unsupervised machine learning models to prod
           |-- Minimal Example.ipynb # minimal example of VAE finding structure in quantum states
           |-- vae.py # module for VAE   
           |-- README
+ 
