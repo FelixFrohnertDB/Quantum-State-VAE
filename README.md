@@ -18,6 +18,6 @@ Install the project using `pip install -e .`.
                 |-- *.npy # saved quantum states  
           |-- Analysis.ipynb # contains code to reproduce figures from paper
           |-- Minimal Example.ipynb # minimal example of VAE finding structure in quantum states
-          |-- vae.py # module for VAE   
+          |-- src/vae_utils.py # module for VAE   
           |-- README
  
