@@ -67,7 +67,7 @@ class VAE(tf.keras.Model):
             z_mean, z_log_var, z = self.encoder(data)
             reconstruction = self.decoder(z)
             reconstruction_loss = tf.reduce_mean(
-                tf.reduce_sum(tf.keras.losses.mean_squared_error(data, reconstruction), axis=-1))
+                tf.reduce_sum(tf.square(data - reconstruction), axis=-1))
 
             kl_loss = -0.5 * (1 + z_log_var - tf.square(z_mean) - tf.exp(z_log_var))
             kl_loss = tf.reduce_mean(tf.reduce_sum(kl_loss, axis=1))
@@ -89,13 +89,13 @@ class VAE(tf.keras.Model):
         _, _, z_test = self.encoder(data[0])
         test_reconstruction = self.decoder(z_test)
         val_loss = tf.reduce_mean(
-            tf.reduce_sum(tf.keras.losses.mean_squared_error(data[0], test_reconstruction), axis=-1))
+            tf.reduce_sum(tf.square(data[0] - test_reconstruction), axis=-1))
         self.val_loss_tracker.update_state(val_loss)
         return {"val_loss": self.val_loss_tracker.result()}
 
 
 def vae_mlp_4x4(latent_dim, act_func, f_act):
-    encoder_inputs = tf.keras.Input(shape=16)
+    encoder_inputs = tf.keras.Input(shape=(16,))
     x = encoder_inputs
     x = tf.keras.layers.Dense(16, activation=act_func)(x)
     x = tf.keras.layers.Dropout(0.2)(x)

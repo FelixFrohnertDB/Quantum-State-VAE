@@ -1,0 +1,7 @@
+.venv
+notebooks/Analysis.ipynb
+*.pdf
+*.png
+*.txt
+*.pyc
+PKG-INFO
