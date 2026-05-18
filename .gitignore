@@ -5,3 +5,5 @@ notebooks/Analysis.ipynb
 *.txt
 *.pyc
 PKG-INFO
+.idea/
+.ipynb_checkpoints/
